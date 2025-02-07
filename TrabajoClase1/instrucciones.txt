@@ -1,0 +1,7 @@
+//Red neuronal para evaluar palabras palindromas 
+
+//Cada letra va a ser un input
+
+//Se va a mapear la letra a un numero
+
+//
