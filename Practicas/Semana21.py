@@ -16,7 +16,7 @@ class CapaDensa:
 # Funcion de Activacion
 class ReLU: # Rectificador Lineal Unitario
     def forward(self, datos: list[float]) -> None:
-        self.salida = np.maximum(0, datos)
+        self.salida = np.maximum(0, datos) #formula: 
 
 class Softmax:  
     def forward(self, datos: list[float]) -> None:

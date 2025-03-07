@@ -1,12 +1,18 @@
-import Practicas.Semana21 as rn
+import numpy as np
+import Semana21 as rn
 
-capa1 = rn.CapaDensa(5, 10)
+capa1 = rn.CapaDensa(5, 2)
 
 #                5 entradas
-capa1.forward([1, 2, 3, 4, 5 ])
+capa1.forward(np.array([[1, 2, 3, 4, 5 ]]))
 
 relu1 = rn.ReLU()
 relu1.forward(capa1.salida)
+
+print("Salida de la capa 1 -------------------")
+
+
+print(relu1.salida)
 
 print("Pesos de la capa 1 -------------------")
 print(capa1.pesos)
@@ -14,8 +20,10 @@ print(capa1.pesos)
 print("Salida de la capa 1 -------------------")
 print(capa1.salida)
 
-capa2 = rn.CapaDensa(10, 10)
+capa2 = rn.CapaDensa(2, 10)
 capa2.forward(capa1.salida)
+
+
 
 relu2 = rn.ReLU()
 relu2.forward(capa2.salida)
@@ -41,5 +49,7 @@ print(capaSalida.salida)
 
 print("Salida de la capa de salida con softmax -------------------")
 print(softmax.salida)
+
+
 
 

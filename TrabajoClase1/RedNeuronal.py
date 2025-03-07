@@ -18,9 +18,9 @@ class ReLU: # Rectificador Lineal Unitario
     def forward(self, datos: list[float]) -> None:
         self.salida = np.maximum(0, datos)
 
-class Softmax:  
+class Softmax:   
     def forward(self, datos: list[float]) -> None:
-        exponencial = np.exp(datos -np.max(datos))
+        exponencial = np.exp(datos - np.max(datos))
         self.salida = exponencial / np.sum(exponencial, axis=1)
 
 # Clasificacion Binaria
