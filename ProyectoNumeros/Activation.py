@@ -26,3 +26,6 @@ class SoftmaxActivation:
 
     def backward(self, grad_output, outputs):
         return grad_output - outputs
+
+
+
