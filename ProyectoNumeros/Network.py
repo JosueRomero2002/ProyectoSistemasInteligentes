@@ -1,5 +1,5 @@
 import numpy as np
-from Layers import DenseLayer
+from DenseLayer import DenseLayer
 from Activation import ReLUActivation, SoftmaxActivation
 from LossFunctions import CrossEntropyLoss
 
