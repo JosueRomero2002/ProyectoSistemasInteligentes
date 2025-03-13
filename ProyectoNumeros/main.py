@@ -23,11 +23,11 @@ learning_rate = 0.1
 
 nn = NeuralNetwork(input_size, hidden_size, output_size, learning_rate)
 
-nn.train(X_train, y_train, epochs=10)
+nn.train(X_train, y_train, epochs=20)
 
 
 y_test_pred = nn.predict(X_test)
 accuracy = np.mean(np.argmax(y_test, axis=1) == y_test_pred)
 print("Accuracy: [" +  str(accuracy * 100) + "%]")
 
-
+# Use Mathlib to make the graphs

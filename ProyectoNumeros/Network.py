@@ -30,13 +30,13 @@ class NeuralNetwork:
         grad_a1 = self.activation1.backward(grad_z2)
         self.capa1.backward(grad_a1, self.learning_rate)
 
-    def train(self, X, y, epochs=1000):
+    def train(self, X, y, epochs=60000):
         for epoch in range(epochs):
             y_pred = self.forward(X)
             loss = self.loss_function.compute_loss(y, y_pred)
             self.backward(X, y, y_pred)
-            if epoch % 100 == 0:
-                print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}]")
+           
+            print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}]")
 
     def predict(self, X):
         return np.argmax(self.forward(X), axis=1)
