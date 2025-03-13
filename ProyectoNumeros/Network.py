@@ -12,6 +12,10 @@ class NeuralNetwork:
         self.loss_function = CrossEntropyLoss()
         self.learning_rate = learning_rate
 
+        #Weights loaded
+        # self.capa1.load_weights("ProyectoNumeros/savedweights")
+
+
     def forward(self, X):
         self.z1 = self.capa1.forward(X)
         self.a1 = self.activation1.forward(self.z1)
@@ -32,7 +36,7 @@ class NeuralNetwork:
             loss = self.loss_function.compute_loss(y, y_pred)
             self.backward(X, y, y_pred)
             if epoch % 100 == 0:
-                print(f"Epoch {epoch}, Loss: {loss:.4f}")
+                print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}]")
 
     def predict(self, X):
         return np.argmax(self.forward(X), axis=1)

@@ -14,13 +14,20 @@ X_test = mnist_test.get_flattened_data()
 y_test = mnist_test.get_one_hot_labels()
 
 
-input_size = 784
-hidden_size = 128
+input_size = 784 
+hidden_size = 64
 output_size = 10
 learning_rate = 0.1
+
+
+
 nn = NeuralNetwork(input_size, hidden_size, output_size, learning_rate)
-nn.train(X_train, y_train, epochs=100)
+
+nn.train(X_train, y_train, epochs=10)
+
 
 y_test_pred = nn.predict(X_test)
 accuracy = np.mean(np.argmax(y_test, axis=1) == y_test_pred)
-print("Accuracy: " +  (accuracy * 100) + "%")
+print("Accuracy: [" +  str(accuracy * 100) + "%]")
+
+
