@@ -36,10 +36,16 @@ train_labels_file = "train-labels-idx1-ubyte"
 
 dataset_files = [test_images_file, test_labels_file, train_images_file, train_labels_file]
 
-if not checkFileExists("mnist/dataset", dataset_files):
+if not checkFileExists("ProyectoNumeros/Mnist/dataset", dataset_files):
     sys.exit(1)
 
-ds_folder_path = Path("mnist/dataset")
+ds_folder_path = Path("ProyectoNumeros/Mnist/dataset")
+
+
+test_images_path = ds_folder_path / "t10k-images-idx3-ubyte"
+test_labels_path = ds_folder_path / "t10k-labels-idx1-ubyte"
+train_images_path = ds_folder_path / "train-images-idx3-ubyte"
+train_labels_path = ds_folder_path / "train-labels-idx1-ubyte"
 
 test_images_path = ds_folder_path / "t10k-images-idx3-ubyte"
 test_labels_path = ds_folder_path / "t10k-labels-idx1-ubyte"

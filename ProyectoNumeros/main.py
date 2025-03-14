@@ -15,15 +15,18 @@ y_test = mnist_test.get_one_hot_labels()
 
 
 input_size = 784 
-hidden_size = 64
+hidden_size = 128
 output_size = 10
 learning_rate = 0.1
+
+
+# LossRegulation = 1 or 2 (using l1 or l2) (l1 is optional but l2 is obligatory)
 
 
 
 nn = NeuralNetwork(input_size, hidden_size, output_size, learning_rate)
 
-nn.train(X_train, y_train, epochs=20)
+nn.train(X_train, y_train, epochs=10)
 
 
 y_test_pred = nn.predict(X_test)

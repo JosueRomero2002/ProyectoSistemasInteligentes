@@ -2,6 +2,8 @@
 
 import numpy as np
 
+import os
+
 
 #  2. Build the Neural Network Components
 #  a. Implement a DenseLayer Class
@@ -42,3 +44,21 @@ class DenseLayer:
         self.biases -= learning_rate * grad_biases
         
         return grad_input
+
+
+    def weights_saver(self, path="ProyectoNumeros/savedweights"):
+        if not os.path.exists(path):
+            os.makedirs(path)
+        np.save(f"{path}/weights.txt", self.weights)
+        np.save(f"{path}/biases.txt", self.biases)
+        print("Weights and Biases saved")
+
+    
+    def weights_loader(self, path):
+        try:
+            self.weights = np.load(f"{path}/weights.txt")
+            self.biases = np.load(f"{path}/biases.txt")
+            print("Weights and Biases of loaded")
+        except FileNotFoundError:
+            print("ERROR: Files Not Found")
+                        

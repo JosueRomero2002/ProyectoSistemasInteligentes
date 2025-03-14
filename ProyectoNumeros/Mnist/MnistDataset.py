@@ -30,4 +30,4 @@ class MnistDataset:
 
             self.labels = np.frombuffer(f.read(), dtype=np.uint8)
 
-            self.labels = np.eye(10)[labels]
+            self.labels = np.eye(10)[self.labels]
