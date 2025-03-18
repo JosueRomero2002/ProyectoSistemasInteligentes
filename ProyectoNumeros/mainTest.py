@@ -23,6 +23,7 @@ hiddenSize = 128
 outputSize = 10
 learningRate = 0.1
 
+
 # Capa 1
 capa1 = DenseLayer(inputDataLength, hiddenSize)
 salida_capa1 = capa1.forward(X_train[:10]) 

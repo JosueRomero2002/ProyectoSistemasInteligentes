@@ -18,6 +18,8 @@ input_size = 784
 hidden_size = 128
 output_size = 10
 learning_rate = 0.1
+epochs=100
+batchSize = 64
 
 
 # LossRegulation = 1 or 2 (using l1 or l2) (l1 is optional but l2 is obligatory)
@@ -26,7 +28,7 @@ learning_rate = 0.1
 
 nn = NeuralNetwork(input_size, hidden_size, output_size, learning_rate)
 
-nn.train(X_train, y_train, epochs=10)
+nn.train(X_train, y_train, epochs, batchSize)
 
 
 y_test_pred = nn.predict(X_test)

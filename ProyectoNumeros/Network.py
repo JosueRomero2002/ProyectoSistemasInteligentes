@@ -32,15 +32,38 @@ class NeuralNetwork:
         grad_a1 = self.activation1.backward(grad_z2)
         self.capa1.backward(grad_a1, self.learning_rate)
 
-    def train(self, X, y, epochs):
+    def train(self, X, y, epochs, batch_size=64):
+        num_samples = X.shape[0]
         for epoch in range(epochs):
-            y_pred = self.forward(X)
-            loss = self.loss_function.compute_loss(y, y_pred)
-            self.backward(X, y, y_pred)
-           
-            print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}]")
-            self.capa1.weights_saver("ProyectoNumeros/savedweights")
-            self.capa2.weights_saver("ProyectoNumeros/savedweights")
+            indices = np.random.permutation(num_samples)  # Shuffle data
+            for i in range(0, num_samples, batch_size):
+                batch_X = X[indices[i:i+batch_size]]
+                batch_y = y[indices[i:i+batch_size]]
+
+                y_pred = self.forward(batch_X)
+                loss = self.loss_function.compute_loss(batch_y, y_pred)
+                self.backward(batch_X, batch_y, y_pred)
+
+            if epoch % 10 == 0:  
+                print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}]")
+                self.capa1.weights_saver("ProyectoNumeros/savedweights")
+                self.capa2.weights_saver("ProyectoNumeros/savedweights")
 
     def predict(self, X):
         return np.argmax(self.forward(X), axis=1)
+
+
+
+    # def train(self, X, y, epochs):
+        
+    #     for epoch in range(epochs):
+    #         y_pred = self.forward(X)
+    #         loss = self.loss_function.compute_loss(y, y_pred)
+    #         self.backward(X, y, y_pred)
+           
+            
+    #         print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}]")
+    #         self.capa1.weights_saver("ProyectoNumeros/savedweights")
+    #         self.capa2.weights_saver("ProyectoNumeros/savedweights")
+                
+                
