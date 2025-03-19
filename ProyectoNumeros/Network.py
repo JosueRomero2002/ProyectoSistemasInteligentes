@@ -25,14 +25,22 @@ class NeuralNetwork:
         self.a2 = self.activation2.forward(self.z2)
         return self.a2
 
-    def backward(self, X, y_true, y_pred):
+    def backward(self, X, y_true, y_pred, lambda_l2=0.01):
         grad_loss = self.loss_function.compute_gradient(y_true, y_pred)
         grad_a2 = self.activation2.backward(grad_loss, y_pred)
         grad_z2 = self.capa2.backward(grad_a2, self.learning_rate)
+
+        # l2
+        self.capa2.weights -= lambda_l2 * self.capa2.weights
+        self.capa1.weights -= lambda_l2 * self.capa1.weights
+
         grad_a1 = self.activation1.backward(grad_z2)
         self.capa1.backward(grad_a1, self.learning_rate)
 
-    def train(self, X, y, epochs, batch_size=64):
+
+
+
+    def train(self, X, y, epochs, batch_size, ytest, X_test):
         num_samples = X.shape[0]
         for epoch in range(epochs):
             indices = np.random.permutation(num_samples)  # Shuffle data
@@ -44,8 +52,13 @@ class NeuralNetwork:
                 loss = self.loss_function.compute_loss(batch_y, y_pred)
                 self.backward(batch_X, batch_y, y_pred)
 
+            
+                
             if epoch % 10 == 0:  
-                print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}]")
+                y_test_pred = self.predict(X_test)
+                accuracy = np.mean(np.argmax(ytest, axis=1) == y_test_pred)
+
+                print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}] --Acurracy: [{accuracy:.2f}]")
                 self.capa1.weights_saver("ProyectoNumeros/savedweights")
                 self.capa2.weights_saver("ProyectoNumeros/savedweights")
 
@@ -65,5 +78,12 @@ class NeuralNetwork:
     #         print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}]")
     #         self.capa1.weights_saver("ProyectoNumeros/savedweights")
     #         self.capa2.weights_saver("ProyectoNumeros/savedweights")
+
+        # def backward(self, X, y_true, y_pred):
+        # grad_loss = self.loss_function.compute_gradient(y_true, y_pred)
+        # grad_a2 = self.activation2.backward(grad_loss, y_pred)
+        # grad_z2 = self.capa2.backward(grad_a2, self.learning_rate)
+        # grad_a1 = self.activation1.backward(grad_z2)
+        # self.capa1.backward(grad_a1, self.learning_rate)
                 
                 

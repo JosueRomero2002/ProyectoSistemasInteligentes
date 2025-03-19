@@ -18,7 +18,7 @@ input_size = 784
 hidden_size = 128
 output_size = 10
 learning_rate = 0.1
-epochs=100
+epochs=200
 batchSize = 64
 
 
@@ -28,7 +28,7 @@ batchSize = 64
 
 nn = NeuralNetwork(input_size, hidden_size, output_size, learning_rate)
 
-nn.train(X_train, y_train, epochs, batchSize)
+nn.train(X_train, y_train, epochs, batchSize, y_test, X_test)
 
 
 y_test_pred = nn.predict(X_test)
