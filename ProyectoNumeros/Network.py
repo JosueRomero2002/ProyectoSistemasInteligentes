@@ -6,14 +6,11 @@ from LossFunctions import CrossEntropyLoss
 class NeuralNetwork:
     def __init__(self, input_size, hidden_size, output_size, learning_rate=0.1):
         self.capa1 = DenseLayer(input_size, hidden_size)
-       
-        self.capa2 = DenseLayer(hidden_size, output_size)
- 
-
         self.capa1.weights_loader("ProyectoNumeros/savedweights_capa1")
         self.activation1 = ReLUActivation()
+        self.capa2 = DenseLayer(hidden_size, output_size)
         self.capa2.weights_loader("ProyectoNumeros/savedweights_capa2")
-       
+   
        
         self.activation2 = SoftmaxActivation()
         self.loss_function = CrossEntropyLoss()

@@ -15,9 +15,9 @@ y_test = mnist_test.get_one_hot_labels()
 
 
 input_size = 784 
-hidden_size = 256
+hidden_size = 128
 output_size = 10
-learning_rate = 0.0001
+learning_rate = 0.01
 epochs=20
 batchSize = 64
 
