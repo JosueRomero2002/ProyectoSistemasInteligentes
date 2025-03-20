@@ -15,11 +15,14 @@ y_test = mnist_test.get_one_hot_labels()
 
 
 input_size = 784 
-hidden_size = 128
+hidden_size = 256
 output_size = 10
-learning_rate = 0.1
-epochs=200
+learning_rate = 0.0001
+epochs=20
 batchSize = 64
+
+
+saveandprinteach = 10 #not yet implemented
 
 
 # LossRegulation = 1 or 2 (using l1 or l2) (l1 is optional but l2 is obligatory)

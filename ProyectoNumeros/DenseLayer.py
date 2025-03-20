@@ -56,9 +56,9 @@ class DenseLayer:
     
     def weights_loader(self, path):
         try:
-            self.weights = np.load(f"{path}/weights.txt")
-            self.biases = np.load(f"{path}/biases.txt")
-            print("Weights and Biases of loaded")
+            self.weights = np.load(f"{path}/weights.txt.npy")
+            self.biases = np.load(f"{path}/biases.txt.npy")
+            print("Weights and Biases loaded")
         except FileNotFoundError:
             print("ERROR: Files Not Found")
                         

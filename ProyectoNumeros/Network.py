@@ -6,14 +6,18 @@ from LossFunctions import CrossEntropyLoss
 class NeuralNetwork:
     def __init__(self, input_size, hidden_size, output_size, learning_rate=0.1):
         self.capa1 = DenseLayer(input_size, hidden_size)
-        self.activation1 = ReLUActivation()
+       
         self.capa2 = DenseLayer(hidden_size, output_size)
+ 
+
+        self.capa1.weights_loader("ProyectoNumeros/savedweights_capa1")
+        self.activation1 = ReLUActivation()
+        self.capa2.weights_loader("ProyectoNumeros/savedweights_capa2")
+       
+       
         self.activation2 = SoftmaxActivation()
         self.loss_function = CrossEntropyLoss()
         self.learning_rate = learning_rate
-
-        self.capa1.weights_loader("ProyectoNumeros/savedweights")
-        self.capa2.weights_loader("ProyectoNumeros/savedweights")
         #Weights loaded
         # self.capa1.load_weights("ProyectoNumeros/savedweights")
 
@@ -25,7 +29,7 @@ class NeuralNetwork:
         self.a2 = self.activation2.forward(self.z2)
         return self.a2
 
-    def backward(self, X, y_true, y_pred, lambda_l2=0.01):
+    def backward(self, X, y_true, y_pred, lambda_l2=0.0001):
         grad_loss = self.loss_function.compute_gradient(y_true, y_pred)
         grad_a2 = self.activation2.backward(grad_loss, y_pred)
         grad_z2 = self.capa2.backward(grad_a2, self.learning_rate)
@@ -53,14 +57,16 @@ class NeuralNetwork:
                 self.backward(batch_X, batch_y, y_pred)
 
             
-                
-            if epoch % 10 == 0:  
-                y_test_pred = self.predict(X_test)
-                accuracy = np.mean(np.argmax(ytest, axis=1) == y_test_pred)
+            y_test_pred = self.predict(X_test)
+            accuracy = np.mean(np.argmax(ytest, axis=1) == y_test_pred)
 
-                print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}] --Acurracy: [{accuracy:.2f}]")
-                self.capa1.weights_saver("ProyectoNumeros/savedweights")
-                self.capa2.weights_saver("ProyectoNumeros/savedweights")
+            print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}] --Acurracy: [{(accuracy)*100}%]")
+            self.capa1.weights_saver("ProyectoNumeros/savedweights_capa1")
+            self.capa2.weights_saver("ProyectoNumeros/savedweights_capa2")
+
+
+            # if epoch % 10 == 0:  
+                
 
     def predict(self, X):
         return np.argmax(self.forward(X), axis=1)
