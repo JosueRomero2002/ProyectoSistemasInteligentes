@@ -25,10 +25,11 @@ class SoftmaxActivation:
         sum_exp_values = np.sum(exp_values, axis=1, keepdims=True)
         return exp_values / (sum_exp_values + 1e-9)
 
-
-
     def backward(self, grad_output, outputs):
-        return grad_output * outputs * (1 - outputs)
+        return grad_output
+
+    # def backward(self, grad_output, outputs):
+    #     return grad_output * outputs * (1 - outputs)
 
 
 
