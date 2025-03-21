@@ -59,11 +59,27 @@ class DenseLayer:
         print("Weights and Biases saved")
 
     
-    def weights_loader(self, path):
+    def weights_loader(self, path="ProyectoNumeros/savedweights"):
         try:
-            self.weights = np.load(f"{path}/weights.txt.npy")
-            self.biases = np.load(f"{path}/biases.txt.npy")
-            print("Weights and Biases loaded")
+            loaded_weights = np.load(f"{path}/weights.txt.npy")
+            loaded_biases = np.load(f"{path}/biases.txt.npy")
+            
+            # Verificar dimensiones
+            if loaded_weights.shape == self.weights.shape and loaded_biases.shape == self.biases.shape:
+                self.weights = loaded_weights
+                self.biases = loaded_biases
+                print(f"Loaded weights from {path}")
+            else:
+                print(f"Dimension mismatch in {path}. Using random initialization.")
+                
         except FileNotFoundError:
-            print("ERROR: Files Not Found")
+            print(f"No weights found in {path}. Using random initialization.")
+    
+    # def weights_loader(self, path):
+    #     try:
+    #         self.weights = np.load(f"{path}/weights.txt.npy")
+    #         self.biases = np.load(f"{path}/biases.txt.npy")
+    #         print("Weights and Biases loaded")
+    #     except FileNotFoundError:
+    #         print("ERROR: Files Not Found")
                         

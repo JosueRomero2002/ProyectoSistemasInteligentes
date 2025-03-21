@@ -15,28 +15,46 @@ X_test = mnist_test.get_flattened_data()
 y_test = mnist_test.get_one_hot_labels()
 
 
+#   <----------MENU
+usingSecondLayer = True   # Activar segunda hidden layer
+#Warning: Changing this value might rewrite the saved weights due to the different number of weights
+usingAdamOptimizer = False
+usingLossRegulation = False
 
-# Hyperparameters Settings        <----------MENU
+
+# Hyperparameters Settings      
 input_size = 784
 hidden_size = 128
 output_size = 10
 learning_rate = 0.001
-epochs = 10
+epochs = 20
 batchSize = 64
-saveandprinteach = 50 
+saveandprinteach = 5 
 
 
 
 # TESTING <----------MENU
 num_samples=3
-showResults = False
+showResults = True
+
+
 
 # LossRegulation = 1 or 2 (using l1 or l2) (l1 is optional but l2 is obligatory)
 
 
 
 optimizer = Optimizer_Adam(learning_rate=learning_rate, decay=1e-3)
-nn = NeuralNetwork(input_size, hidden_size, output_size, learning_rate, optimizer)
+# nn = NeuralNetwork(input_size, hidden_size, output_size, learning_rate, optimizer)
+
+nn = NeuralNetwork(
+    input_size=input_size,
+    hidden_size=hidden_size,
+    output_size=output_size,
+    learning_rate=learning_rate,
+    optimizer=optimizer if usingAdamOptimizer else None,
+    usingSecondLayer=usingSecondLayer,
+    usingLossRegulation=usingLossRegulation
+)
 
 nn.train(X_train, y_train, epochs, batchSize, y_test, X_test, saveandprinteach)
 
