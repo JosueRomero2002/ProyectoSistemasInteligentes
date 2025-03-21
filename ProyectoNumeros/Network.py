@@ -25,15 +25,25 @@ class NeuralNetwork:
     def backward(self, X, y_true, y_pred, lambda_l2=0.0001):
         grad_loss = self.loss_function.compute_gradient(y_true, y_pred)
         grad_a2 = self.activation2.backward(grad_loss, y_pred)
-        grad_z2 = self.capa2.backward(grad_a2)
-
-        self.capa2.weights -= lambda_l2 * self.capa2.weights
-        self.capa1.weights -= lambda_l2 * self.capa1.weights
-
+        grad_z2 = self.capa2.backward(grad_a2, lambda_l2)  
+       
+        # self.capa2.weights -= lambda_l2 * self.capa2.weights
+        # self.capa1.weights -= lambda_l2 * self.capa1.weights
+        
         grad_a1 = self.activation1.backward(grad_z2)
-        self.capa1.backward(grad_a1)
+        self.capa1.backward(grad_a1, lambda_l2) 
+    # def backward(self, X, y_true, y_pred, lambda_l2=0.0001):
+    #     grad_loss = self.loss_function.compute_gradient(y_true, y_pred)
+    #     grad_a2 = self.activation2.backward(grad_loss, y_pred)
+    #     grad_z2 = self.capa2.backward(grad_a2)
 
-    def train(self, X, y, epochs, batch_size, ytest, X_test):
+    #     self.capa2.weights -= lambda_l2 * self.capa2.weights
+    #     self.capa1.weights -= lambda_l2 * self.capa1.weights
+
+    #     grad_a1 = self.activation1.backward(grad_z2)
+    #     self.capa1.backward(grad_a1)
+
+    def train(self, X, y, epochs, batch_size, ytest, X_test, saveandprinteach):
         num_samples = X.shape[0]
         for epoch in range(epochs):
             indices = np.random.permutation(num_samples)
@@ -51,11 +61,12 @@ class NeuralNetwork:
                     self.optimizer.update_params(self.capa2)
                     self.optimizer.post_update_params()
 
-            y_test_pred = self.predict(X_test)
-            accuracy = np.mean(np.argmax(ytest, axis=1) == y_test_pred)
-            print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}] --Accuracy: [{accuracy*100}%]")
-            self.capa1.weights_saver("ProyectoNumeros/savedweights_capa1")
-            self.capa2.weights_saver("ProyectoNumeros/savedweights_capa2")
+            if epoch % saveandprinteach == 0:
+                y_test_pred = self.predict(X_test)
+                accuracy = np.mean(np.argmax(ytest, axis=1) == y_test_pred)
+                print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}] --Accuracy: [{accuracy*100}%]")
+                self.capa1.weights_saver("ProyectoNumeros/savedweights_capa1")
+                self.capa2.weights_saver("ProyectoNumeros/savedweights_capa2")
 
     def predict(self, X):
         return np.argmax(self.forward(X), axis=1)

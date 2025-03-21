@@ -17,7 +17,8 @@ import os
 
 class DenseLayer:
     def __init__(self, input_size, output_size):
-        self.weights = np.random.randn(input_size, output_size) * 0.01
+        self.weights = np.random.randn(input_size, output_size) * np.sqrt(2. / input_size)
+        # self.weights = np.random.randn(input_size, output_size) * 0.01
         self.biases = np.zeros((1, output_size))
 
  
@@ -42,12 +43,11 @@ class DenseLayer:
 #  • Update Method: 
 # ◦ Adjust weights and biases using gradient descent
 
-    def backward(self, grad_output):
-        self.dweights = np.dot(self.inputs.T, grad_output)
+    def backward(self, grad_output, lambda_l2=0.0): 
+        self.dweights = np.dot(self.inputs.T, grad_output) + lambda_l2 * self.weights
         self.dbiases = np.sum(grad_output, axis=0, keepdims=True)
         grad_input = np.dot(grad_output, self.weights.T)
         return grad_input
-
 
 
 

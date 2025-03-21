@@ -17,12 +17,12 @@ input_size = 784
 hidden_size = 128
 output_size = 10
 learning_rate = 0.001
-epochs = 100
+epochs = 300
 batchSize = 64
 
 
 
-saveandprinteach = 10 #not yet implemented
+saveandprinteach = 50 #not yet implemented
 
 
 
@@ -33,7 +33,7 @@ saveandprinteach = 10 #not yet implemented
 optimizer = Optimizer_Adam(learning_rate=learning_rate, decay=1e-3)
 nn = NeuralNetwork(input_size, hidden_size, output_size, learning_rate, optimizer)
 
-nn.train(X_train, y_train, epochs, batchSize, y_test, X_test)
+nn.train(X_train, y_train, epochs, batchSize, y_test, X_test, saveandprinteach)
 
 y_test_pred = nn.predict(X_test)
 accuracy = np.mean(np.argmax(y_test, axis=1) == y_test_pred)
@@ -42,3 +42,5 @@ print("Accuracy: [" + str(accuracy * 100) + "%]")
 
 
 # Use Mathlib to make the graphs
+
+
