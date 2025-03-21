@@ -15,6 +15,9 @@ class NeuralNetwork:
         self.learning_rate = learning_rate
         self.optimizer = optimizer
 
+        self.training_loss = []
+        self.test_accuracy = []
+
     def forward(self, X):
         self.z1 = self.capa1.forward(X)
         self.a1 = self.activation1.forward(self.z1)
@@ -47,6 +50,10 @@ class NeuralNetwork:
         num_samples = X.shape[0]
         for epoch in range(epochs):
             indices = np.random.permutation(num_samples)
+            epoch_loss = 0
+            num_batches = 0 
+            
+       
             for i in range(0, num_samples, batch_size):
                 batch_X = X[indices[i:i+batch_size]]
                 batch_y = y[indices[i:i+batch_size]]
@@ -54,17 +61,31 @@ class NeuralNetwork:
                 y_pred = self.forward(batch_X)
                 loss = self.loss_function.compute_loss(batch_y, y_pred)
                 self.backward(batch_X, batch_y, y_pred)
+                
+                epoch_loss += loss
+                num_batches += 1 
 
                 if self.optimizer is not None:
                     self.optimizer.pre_update_params()
                     self.optimizer.update_params(self.capa1)
                     self.optimizer.update_params(self.capa2)
                     self.optimizer.post_update_params()
+            
+        
+            if num_batches > 0:
+                avg_epoch_loss = epoch_loss / num_batches
+            else:
+                avg_epoch_loss = 0
+                
+            self.training_loss.append(avg_epoch_loss)
+            
+        
+            y_test_pred = self.predict(X_test)
+            accuracy = np.mean(np.argmax(ytest, axis=1) == y_test_pred)
+            self.test_accuracy.append(accuracy)
 
             if epoch % saveandprinteach == 0:
-                y_test_pred = self.predict(X_test)
-                accuracy = np.mean(np.argmax(ytest, axis=1) == y_test_pred)
-                print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}] --Accuracy: [{accuracy*100}%]")
+                print(f"Epoch [{epoch}] ---- Loss: [{avg_epoch_loss:.4f}] --Accuracy: [{accuracy*100:.2f}%]")  # Mostrar avg_epoch_loss
                 self.capa1.weights_saver("ProyectoNumeros/savedweights_capa1")
                 self.capa2.weights_saver("ProyectoNumeros/savedweights_capa2")
 

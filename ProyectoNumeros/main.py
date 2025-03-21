@@ -26,8 +26,10 @@ batchSize = 64
 saveandprinteach = 50 
 
 
+
 # TESTING <----------MENU
 num_samples=3
+showResults = False
 
 # LossRegulation = 1 or 2 (using l1 or l2) (l1 is optional but l2 is obligatory)
 
@@ -44,26 +46,49 @@ print("Accuracy: [" + str(accuracy * 100) + "%]")
 
 
 
-# Use Mathlib to make the graphs
-
-
 # TEST A SAMPLE (RANDOM)
-
-def show_sample_predictions(model, X, y, num_samples=num_samples):
-    indices = np.random.choice(len(X), num_samples)
-    
-    for i in indices:
-        image = X[i].reshape(28, 28)
-        prediction = model.predict(X[i].reshape(1, -1))[0]
-        true_label = np.argmax(y[i])
+if(showResults):
+    def show_sample_predictions(model, X, y, num_samples=num_samples):
+        indices = np.random.choice(len(X), num_samples)
         
-        plt.figure(figsize=(4, 4))
-        plt.imshow(image, cmap='gray')
-        plt.title(f"Real: {true_label} | Pred: {prediction}")
-        plt.axis('off')
+        for i in indices:
+            image = X[i].reshape(28, 28)
+            prediction = model.predict(X[i].reshape(1, -1))[0]
+            true_label = np.argmax(y[i])
+            
+            plt.figure(figsize=(4, 4))
+            plt.imshow(image, cmap='gray')
+            plt.title(f"Real: {true_label} | Pred: {prediction}")
+            plt.axis('off')
+            plt.show()
+
+    show_sample_predictions(nn, X_test, y_test)
+
+    # GRAPHS
+
+    import matplotlib.pyplot as plt
+
+    def plot_training_history(network):
+        plt.figure(figsize=(12, 5))
+        
+
+        plt.subplot(1, 2, 1)
+        plt.plot(network.training_loss, label='Training')
+        plt.title('Loss')
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
+        plt.legend()
+        
+        plt.subplot(1, 2, 2)
+        plt.plot(network.test_accuracy, label='Test', color='orange')
+        plt.title('Accuracy')
+        plt.xlabel('Epoch')
+        plt.ylabel('Accuracy')
+        plt.legend()
+        
+        plt.tight_layout()
         plt.show()
 
-show_sample_predictions(nn, X_test, y_test)
 
+    plot_training_history(nn)
 
-# GRAPH T
