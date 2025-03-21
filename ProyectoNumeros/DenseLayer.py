@@ -14,11 +14,13 @@ import os
 #  ◦ Biases: Initialize as zeros.
 
 
+
 class DenseLayer:
     def __init__(self, input_size, output_size):
         self.weights = np.random.randn(input_size, output_size) * 0.01
         self.biases = np.zeros((1, output_size))
 
+ 
 
 
 #  • Forward Method: 
@@ -28,6 +30,11 @@ class DenseLayer:
         self.inputs = inputs
         return np.dot(inputs, self.weights) + self.biases
 
+   
+    
+
+
+
         #  1 
 # • Backward Method:
 #  ◦ Compute gradients for weights, biases, and input using the chain rule.
@@ -35,15 +42,13 @@ class DenseLayer:
 #  • Update Method: 
 # ◦ Adjust weights and biases using gradient descent
 
-    def backward(self, grad_output, learning_rate):
+    def backward(self, grad_output):
+        self.dweights = np.dot(self.inputs.T, grad_output)
+        self.dbiases = np.sum(grad_output, axis=0, keepdims=True)
         grad_input = np.dot(grad_output, self.weights.T)
-        grad_weights = np.dot(self.inputs.T, grad_output)
-        grad_biases = np.sum(grad_output, axis=0, keepdims=True)
-        
-        self.weights -= learning_rate * grad_weights
-        self.biases -= learning_rate * grad_biases
-        
         return grad_input
+
+
 
 
     def weights_saver(self, path="ProyectoNumeros/savedweights"):
