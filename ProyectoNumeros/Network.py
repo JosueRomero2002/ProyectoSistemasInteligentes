@@ -79,6 +79,11 @@ class NeuralNetwork:
                 epoch_loss += loss
                 num_batches += 1
 
+                # GCD
+
+                if self.optimizer is None:
+                    self._manual_update_weights()
+
                 if self.optimizer is not None:
                     self.optimizer.pre_update_params()
                     self.optimizer.update_params(self.capa1)
@@ -107,7 +112,24 @@ class NeuralNetwork:
             self.capa2.weights_saver("ProyectoNumeros/savedweights_capa2")
         self.capa3.weights_saver("ProyectoNumeros/savedweights_capa3")
 
+    def _manual_update_weights(self): #SGD
+        # Actualiza pesos y biases para todas las capas
+        learning_rate = self.learning_rate
         
+        # Capa 1
+        self.capa1.weights -= learning_rate * self.capa1.dweights
+        self.capa1.biases -= learning_rate * self.capa1.dbiases
+        
+        # Capa 2 (Second Hidden Layer)
+        if self.usingSecondLayer:
+            self.capa2.weights -= learning_rate * self.capa2.dweights
+            self.capa2.biases -= learning_rate * self.capa2.dbiases
+        
+        # Capa de salida
+        self.capa3.weights -= learning_rate * self.capa3.dweights
+        self.capa3.biases -= learning_rate * self.capa3.dbiases
+
+
     # def train(self, X, y, epochs):
         
     #     for epoch in range(epochs):

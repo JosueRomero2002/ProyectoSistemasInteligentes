@@ -10,13 +10,13 @@ class MnistDataset:
         with open(images_filename, 'rb') as f:
             magic, num_images, rows, cols = struct.unpack('>IIII', f.read(16))
             if magic != 2051:
-                raise ValueError(f"Número mágico incorrecto en imágenes: {magic}")
+                raise ValueError(f"Invalid magic number at Image: {magic}")
             self.images = np.frombuffer(f.read(), dtype=np.uint8).reshape(num_images, rows * cols) / 255.0
         
         with open(labels_filename, 'rb') as f:
             magic, num_labels = struct.unpack('>II', f.read(8))
             if magic != 2049:
-                raise ValueError(f"Número mágico incorrecto en etiquetas: {magic}")
+                raise ValueError(f"Invalid magic number at Labels: {magic}")
             self.labels = np.frombuffer(f.read(), dtype=np.uint8)
 
     def get_flattened_data(self):

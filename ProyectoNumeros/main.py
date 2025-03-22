@@ -16,7 +16,7 @@ y_test = mnist_test.get_one_hot_labels()
 
 
 #   <----------MENU
-usingSecondLayer = True   # Activar segunda hidden layer
+usingSecondLayer = False   # Activar segunda hidden layer
 #Warning: Changing this value might rewrite the saved weights due to the different number of weights
 usingAdamOptimizer = False
 usingLossRegulation = False
@@ -26,8 +26,8 @@ usingLossRegulation = False
 input_size = 784
 hidden_size = 128
 output_size = 10
-learning_rate = 0.001
-epochs = 20
+learning_rate = 0.01
+epochs = 50
 batchSize = 64
 saveandprinteach = 5 
 
