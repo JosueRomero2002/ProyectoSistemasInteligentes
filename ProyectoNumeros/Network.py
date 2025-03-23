@@ -10,19 +10,16 @@ class NeuralNetwork:
         self.usingSecondLayer = usingSecondLayer
         self.usingLossRegulation = usingLossRegulation
         
-        # Capa 1 (Oculta)
         self.capa1 = DenseLayer(input_size, hidden_size)
         self.capa1.weights_loader("ProyectoNumeros/savedweights_capa1")
         self.activation1 = ReLUActivation()
 
-        # Capa 2 (Oculta opcional)
         if self.usingSecondLayer:
             self.capa2 = DenseLayer(hidden_size, hidden_size)
             self.capa2.weights_loader("ProyectoNumeros/savedweights_capa2")
             self.activation2 = ReLUActivation()
         
-        # Capa 3 (Salida)
-        output_input_size = hidden_size if self.usingSecondLayer else hidden_size
+        output_input_size = hidden_size
         self.capa3 = DenseLayer(output_input_size, output_size)
         self.capa3.weights_loader("ProyectoNumeros/savedweights_capa3")
         self.activation3 = SoftmaxActivation()
@@ -35,7 +32,6 @@ class NeuralNetwork:
         self.test_accuracy = []
 
     def forward(self, X):
-        # Propagación hacia adelante
         x = self.capa1.forward(X)
         x = self.activation1.forward(x)
         
@@ -49,7 +45,6 @@ class NeuralNetwork:
     def backward(self, X, y_true, y_pred):
         lambda_l2 = 0.0001 if self.usingLossRegulation else 0.0
         
-        # Propagación hacia atrás
         grad = self.loss_function.compute_gradient(y_true, y_pred)
         grad = self.activation3.backward(grad, y_pred)
         grad = self.capa3.backward(grad, lambda_l2)
@@ -72,19 +67,19 @@ class NeuralNetwork:
                 batch_X = X[indices[i:i+batch_size]]
                 batch_y = y[indices[i:i+batch_size]]
 
+                # hace forward de las 3 capas
                 y_pred = self.forward(batch_X)
+
                 loss = self.loss_function.compute_loss(batch_y, y_pred)
+                
                 self.backward(batch_X, batch_y, y_pred)
                 
                 epoch_loss += loss
                 num_batches += 1
 
-                # GCD
-
                 if self.optimizer is None:
                     self._manual_update_weights()
-
-                if self.optimizer is not None:
+                else:
                     self.optimizer.pre_update_params()
                     self.optimizer.update_params(self.capa1)
                     if self.usingSecondLayer:
@@ -112,41 +107,15 @@ class NeuralNetwork:
             self.capa2.weights_saver("ProyectoNumeros/savedweights_capa2")
         self.capa3.weights_saver("ProyectoNumeros/savedweights_capa3")
 
-    def _manual_update_weights(self): #SGD
-        # Actualiza pesos y biases para todas las capas
+    def _manual_update_weights(self):
         learning_rate = self.learning_rate
         
-        # Capa 1
         self.capa1.weights -= learning_rate * self.capa1.dweights
         self.capa1.biases -= learning_rate * self.capa1.dbiases
         
-        # Capa 2 (Second Hidden Layer)
         if self.usingSecondLayer:
             self.capa2.weights -= learning_rate * self.capa2.dweights
             self.capa2.biases -= learning_rate * self.capa2.dbiases
         
-        # Capa de salida
         self.capa3.weights -= learning_rate * self.capa3.dweights
         self.capa3.biases -= learning_rate * self.capa3.dbiases
-
-
-    # def train(self, X, y, epochs):
-        
-    #     for epoch in range(epochs):
-    #         y_pred = self.forward(X)
-    #         loss = self.loss_function.compute_loss(y, y_pred)
-    #         self.backward(X, y, y_pred)
-           
-            
-    #         print(f"Epoch [{epoch}] ---- Loss: [{loss:.4f}]")
-    #         self.capa1.weights_saver("ProyectoNumeros/savedweights")
-    #         self.capa2.weights_saver("ProyectoNumeros/savedweights")
-
-        # def backward(self, X, y_true, y_pred):
-        # grad_loss = self.loss_function.compute_gradient(y_true, y_pred)
-        # grad_a2 = self.activation2.backward(grad_loss, y_pred)
-        # grad_z2 = self.capa2.backward(grad_a2, self.learning_rate)
-        # grad_a1 = self.activation1.backward(grad_z2)
-        # self.capa1.backward(grad_a1, self.learning_rate)
-                
-                

@@ -1,12 +1,3 @@
-#  b. Implement Activation Classes
-#  • ReLUActivation:
-#  ◦ Forward: Apply ReLU (output = max(0, input)).
-#  ◦ Backward: Compute gradient for ReLU input.
-#  • SoftmaxActivation:
-#  ◦ Forward: Compute softmax probabilities.
-#  ◦ Backward: Compute gradient for softmax input
-
-
 import numpy as np
 
 class ReLUActivation:
@@ -26,11 +17,11 @@ class SoftmaxActivation:
         return exp_values / (sum_exp_values + 1e-9)
 
     def backward(self, grad_output, outputs):
-        return grad_output
-
-    # def backward(self, grad_output, outputs):
-    #     return grad_output * outputs * (1 - outputs)
-
-
-
-
+        # Compute Jacobian matrix for softmax
+        batch_size, num_classes = outputs.shape
+        grad = np.empty_like(grad_output)
+        for i in range(batch_size):
+            softmax_vector = outputs[i].reshape(-1, 1)
+            jacobian_matrix = np.diagflat(softmax_vector) - np.dot(softmax_vector, softmax_vector.T)
+            grad[i] = np.dot(jacobian_matrix, grad_output[i])
+        return grad
