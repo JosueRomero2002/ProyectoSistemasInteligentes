@@ -4,69 +4,80 @@ import numpy as np
 from Optimizer_Adam import Optimizer_Adam
 import matplotlib.pyplot as plt
 
+# Docuemtacion Realizada Con Ayuda de DEEPSEEK
+
+# Carga del dataset MNIST
 mnist_train = MnistDataset()
-mnist_train.load("ProyectoNumeros/Mnist/dataset/train-images-idx3-ubyte", "ProyectoNumeros/Mnist/dataset/train-labels-idx1-ubyte")
+mnist_train.load(
+    "ProyectoNumeros/Mnist/dataset/train-images-idx3-ubyte",  # Ruta imágenes entrenamiento
+    "ProyectoNumeros/Mnist/dataset/train-labels-idx1-ubyte"   # Ruta etiquetas entrenamiento
+)
 mnist_test = MnistDataset()
-mnist_test.load("ProyectoNumeros/Mnist/dataset/t10k-images-idx3-ubyte", "ProyectoNumeros/Mnist/dataset/t10k-labels-idx1-ubyte")
+mnist_test.load(
+    "ProyectoNumeros/Mnist/dataset/t10k-images-idx3-ubyte",   # Ruta imágenes test
+    "ProyectoNumeros/Mnist/dataset/t10k-labels-idx1-ubyte"    # Ruta etiquetas test
+)
 
-X_train = mnist_train.get_flattened_data()
-y_train = mnist_train.get_one_hot_labels()
-X_test = mnist_test.get_flattened_data()
-y_test = mnist_test.get_one_hot_labels()
+# Preparación de datos
+X_train = mnist_train.get_flattened_data()  # Imágenes aplanadas (60000x784)
+y_train = mnist_train.get_one_hot_labels()  # Etiquetas one-hot (60000x10)
+X_test = mnist_test.get_flattened_data()    # Datos de test (10000x784)
+y_test = mnist_test.get_one_hot_labels()    # Etiquetas test (10000x10)
 
+# Configuración del modelo (MENU DE OPCIONES)
+usingSecondLayer = True    # Activar segunda capa oculta (aumenta capacidad del modelo)
+usingAdamOptimizer = True  # Usar Adam en lugar de SGD manual
+usingLossRegulation = True # Aplicar regularización L2
 
-#   <----------MENU
-usingSecondLayer = False   # Activar segunda hidden layer
-#Warning: Changing this value might rewrite the saved weights due to the different number of weights
-usingAdamOptimizer = False
-usingLossRegulation = False
+# Hiperparámetros del modelo
+input_size = 784        # 28x28 pixeles (MNIST)
+hidden_size = 128       # Neuronas en capa oculta
+output_size = 10        # 10 dígitos (0-9)
+learning_rate = 0.1     # Tasa de aprendizaje inicial
+epochs = 20             # Iteraciones completas sobre el dataset
+batchSize = 64          # Tamaño del mini-batch
+saveandprinteach = 1    # Frecuencia de guardado/impresión (cada X épocas)
 
+# Configuración de pruebas
+num_samples = 3         # Número de ejemplos a mostrar
+showResults = False     # Mostrar gráficos al finalizar
 
-# Hyperparameters Settings      
-input_size = 784
-hidden_size = 128
-output_size = 10
-learning_rate = 0.1
-epochs = 20
-batchSize = 64
-saveandprinteach = 1
+# Inicialización del optimizador Adam (si está activado)
+optimizer = Optimizer_Adam(
+    learning_rate=learning_rate, 
+    decay=1e-3  # Decaimiento de tasa de aprendizaje
+)
 
-
-
-# TESTING <----------MENU
-num_samples=3
-showResults = False
-
-
-
-# LossRegulation = 1 or 2 (using l1 or l2) (l1 is optional but l2 is obligatory)
-
-
-
-optimizer = Optimizer_Adam(learning_rate=learning_rate, decay=1e-3)
-# nn = NeuralNetwork(input_size, hidden_size, output_size, learning_rate, optimizer)
-
+# Creación de la red neuronal
 nn = NeuralNetwork(
     input_size=input_size,
     hidden_size=hidden_size,
     output_size=output_size,
     learning_rate=learning_rate,
-    optimizer=optimizer if usingAdamOptimizer else None,
+    optimizer=optimizer if usingAdamOptimizer else None,  # Selección dinámica de optimizador
     usingSecondLayer=usingSecondLayer,
     usingLossRegulation=usingLossRegulation
 )
 
-nn.train(X_train, y_train, epochs, batchSize, y_test, X_test, saveandprinteach)
+# Entrenamiento del modelo
+nn.train(
+    X_train, y_train, 
+    epochs=epochs,
+    batch_size=batchSize,
+    ytest=y_test,       # Etiquetas de test para validación
+    X_test=X_test,      # Datos de test para validación
+    saveandprinteach=saveandprinteach  # Frecuencia de guardado
+)
 
+# Evaluación final del modelo
 y_test_pred = nn.predict(X_test)
 accuracy = np.mean(np.argmax(y_test, axis=1) == y_test_pred)
 print("Accuracy: [" + str(accuracy * 100) + "%]")
 
-
-
-# TEST A SAMPLE (RANDOM)
-if(showResults):
+# Visualización de resultados (si está activado)
+if showResults:
     def show_sample_predictions(model, X, y, num_samples=num_samples):
+        """Muestra predicciones de muestra con imágenes"""
         indices = np.random.choice(len(X), num_samples)
         
         for i in indices:
@@ -80,16 +91,15 @@ if(showResults):
             plt.axis('off')
             plt.show()
 
+    # Mostrar ejemplos aleatorios
     show_sample_predictions(nn, X_test, y_test)
 
-    # GRAPHS
-
-    import matplotlib.pyplot as plt
-
+    # Visualización del historial de entrenamiento
     def plot_training_history(network):
+        """Genera gráficos de pérdida y precisión durante el entrenamiento"""
         plt.figure(figsize=(12, 5))
         
-
+        # Gráfico de pérdida
         plt.subplot(1, 2, 1)
         plt.plot(network.training_loss, label='Training')
         plt.title('Loss')
@@ -97,6 +107,7 @@ if(showResults):
         plt.ylabel('Loss')
         plt.legend()
         
+        # Gráfico de precisión
         plt.subplot(1, 2, 2)
         plt.plot(network.test_accuracy, label='Test', color='orange')
         plt.title('Accuracy')
@@ -107,6 +118,4 @@ if(showResults):
         plt.tight_layout()
         plt.show()
 
-
     plot_training_history(nn)
-
