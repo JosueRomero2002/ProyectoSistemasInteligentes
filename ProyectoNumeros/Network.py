@@ -21,7 +21,7 @@ class NeuralNetwork:
         usingLossRegulation (bool): Habilita regularización L2 (default: False)
     """
     
-    def __init__(self, input_size, hidden_size, output_size, learning_rate=0.1, 
+    def __init__(self, input_size, hidden_size, output_size, model, learning_rate=0.1, 
                  optimizer=None, usingSecondLayer=False, usingLossRegulation=False):
         """
         Inicializa la red neuronal con parámetros configurables.
@@ -29,22 +29,26 @@ class NeuralNetwork:
         # Configuración de arquitectura
         self.usingSecondLayer = usingSecondLayer
         self.usingLossRegulation = usingLossRegulation
+        self.model = model + ("_2" if usingSecondLayer else "") 
+
+
+        
         
         # Capa 1: Entrada -> Oculta
         self.capa1 = DenseLayer(input_size, hidden_size)
-        self.capa1.weights_loader("ProyectoNumeros/savedweights_capa1")
+        self.capa1.weights_loader(f"ProyectoNumeros/models/{self.model}/savedweights_capa1")
         self.activation1 = ReLUActivation()
 
         # Capa 2 Opcional: Oculta -> Oculta
         if self.usingSecondLayer:
             self.capa2 = DenseLayer(hidden_size, hidden_size)
-            self.capa2.weights_loader("ProyectoNumeros/savedweights_capa2")
+            self.capa2.weights_loader(f"ProyectoNumeros/models/{self.model}/savedweights_capa2")
             self.activation2 = ReLUActivation()
         
         # Capa de Salida: Oculta -> Salida
         output_input_size = hidden_size if not self.usingSecondLayer else hidden_size
         self.capa3 = DenseLayer(output_input_size, output_size)
-        self.capa3.weights_loader("ProyectoNumeros/savedweights_capa3")
+        self.capa3.weights_loader(f"ProyectoNumeros/models/{self.model}/savedweights_capa3")
         self.activation3 = SoftmaxActivation()
 
         # Configuración de entrenamiento
@@ -186,10 +190,10 @@ class NeuralNetwork:
 
     def _save_weights(self):
         """Guarda pesos de todas las capas en archivos .npy"""
-        self.capa1.weights_saver("ProyectoNumeros/savedweights_capa1")
+        self.capa1.weights_saver(f"ProyectoNumeros/models/{self.model}/savedweights_capa1")
         if self.usingSecondLayer:
-            self.capa2.weights_saver("ProyectoNumeros/savedweights_capa2")
-        self.capa3.weights_saver("ProyectoNumeros/savedweights_capa3")
+            self.capa2.weights_saver(f"ProyectoNumeros/models/{self.model}/savedweights_capa2")
+        self.capa3.weights_saver(f"ProyectoNumeros/models/{(self.model)}/savedweights_capa3")
 
     def _manual_update_weights(self):
         """Actualiza pesos manualmente usando SGD simple"""

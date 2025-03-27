@@ -72,7 +72,7 @@ class DenseLayer:
         
         return grad_input
     
-    def weights_saver(self, path="ProyectoNumeros/savedweights"):
+    def weights_saver(self, path="ProyectoNumeros/models/base/savedweights"):
         """
         Guarda pesos y biases en archivos .npy.
         
@@ -90,7 +90,7 @@ class DenseLayer:
         np.save(f"{path}/biases.txt", self.biases)
         print("Weights and Biases saved")
     
-    def weights_loader(self, path="ProyectoNumeros/savedweights"):
+    def weights_loader(self, path="ProyectoNumeros/models/base/savedweights"):
         """
         Carga pesos y biases desde archivos .npy.
         

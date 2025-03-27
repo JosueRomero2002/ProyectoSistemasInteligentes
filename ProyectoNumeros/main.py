@@ -3,6 +3,7 @@ from Network import NeuralNetwork
 import numpy as np
 from Optimizer_Adam import Optimizer_Adam
 import matplotlib.pyplot as plt
+import time 
 
 # Docuemtacion Realizada Con Ayuda de DEEPSEEK
 
@@ -29,18 +30,21 @@ usingSecondLayer = True    # Activar segunda capa oculta (aumenta capacidad del 
 usingAdamOptimizer = True  # Usar Adam en lugar de SGD manual
 usingLossRegulation = True # Aplicar regularización L2
 
+# Direccion de Modelo
+model = "model1"
+
 # Hiperparámetros del modelo
 input_size = 784        # 28x28 pixeles (MNIST)
-hidden_size = 128       # Neuronas en capa oculta
+hidden_size = 128      # Neuronas en capa oculta
 output_size = 10        # 10 dígitos (0-9)
-learning_rate = 0.1     # Tasa de aprendizaje inicial
-epochs = 20             # Iteraciones completas sobre el dataset
-batchSize = 64          # Tamaño del mini-batch
+learning_rate = 0.001     # Tasa de aprendizaje inicial
+epochs = 500           # Iteraciones completas sobre el dataset
+batchSize = 64      # Tamaño del mini-batch
 saveandprinteach = 1    # Frecuencia de guardado/impresión (cada X épocas)
 
 # Configuración de pruebas
-num_samples = 3         # Número de ejemplos a mostrar
-showResults = False     # Mostrar gráficos al finalizar
+num_samples = 3        # Número de ejemplos a mostrar
+showResults = True     # Mostrar gráficos al finalizar
 
 # Inicialización del optimizador Adam (si está activado)
 optimizer = Optimizer_Adam(
@@ -48,15 +52,21 @@ optimizer = Optimizer_Adam(
     decay=1e-3  # Decaimiento de tasa de aprendizaje
 )
 
+# Marca Inicial de Tiempo
+start_time = time.time()  
+
+
 # Creación de la red neuronal
 nn = NeuralNetwork(
     input_size=input_size,
     hidden_size=hidden_size,
     output_size=output_size,
+    model=model,
     learning_rate=learning_rate,
     optimizer=optimizer if usingAdamOptimizer else None,  # Selección dinámica de optimizador
     usingSecondLayer=usingSecondLayer,
     usingLossRegulation=usingLossRegulation
+    
 )
 
 # Entrenamiento del modelo
@@ -69,10 +79,15 @@ nn.train(
     saveandprinteach=saveandprinteach  # Frecuencia de guardado
 )
 
+# Marca Final de Entrenamiento
+end_time = time.time() 
+training_time = end_time - start_time 
+
 # Evaluación final del modelo
 y_test_pred = nn.predict(X_test)
 accuracy = np.mean(np.argmax(y_test, axis=1) == y_test_pred)
 print("Accuracy: [" + str(accuracy * 100) + "%]")
+print(f"                     ≈ {training_time/60:.2f} minutos")
 
 # Visualización de resultados (si está activado)
 if showResults:
