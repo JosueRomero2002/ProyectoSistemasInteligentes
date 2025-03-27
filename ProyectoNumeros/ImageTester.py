@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from Network import NeuralNetwork
+from Optimizer_Adam import Optimizer_Adam
 
 def load_trained_model():
     """
@@ -16,9 +17,20 @@ def load_trained_model():
           - ProyectoNumeros/savedweights_capa2
         - Crea una nueva instancia de red neuronal con la misma arquitectura que durante el entrenamiento
     """
-    nn = NeuralNetwork(input_size=784, hidden_size=128, output_size=10)
-    nn.capa1.weights_loader("ProyectoNumeros/savedweights_capa1")
-    nn.capa2.weights_loader("ProyectoNumeros/savedweights_capa2")
+    # Inicialización del optimizador Adam (si está activado)
+    learning_rate = 0.1
+    optimizer = Optimizer_Adam(
+        learning_rate=learning_rate, 
+        decay=1e-3  # Decaimiento de tasa de aprendizaje
+    )
+
+
+    
+    nn = NeuralNetwork(input_size=784, hidden_size=128, output_size=10, model="model6", learning_rate=0.1, optimizer=optimizer, usingSecondLayer=False, usingLossRegulation=True)
+  
+    nn.capa1.weights_loader(f"ProyectoNumeros/savedweights_capa1")
+    nn.capa3.weights_loader(f"ProyectoNumeros/savedweights_capa3")
+
     return nn
 
 def process_custom_image(image_path):
@@ -74,5 +86,5 @@ def test_custom_image(model, image_path):
 # Ejemplo de uso
 if __name__ == "__main__":
     model = load_trained_model()
-    result = test_custom_image(model, "ProyectoNumeros/CustomImages/img2.png")
+    result = test_custom_image(model, "ProyectoNumeros/CustomImages/img1.png")
     print("El número identificado es:", result)
