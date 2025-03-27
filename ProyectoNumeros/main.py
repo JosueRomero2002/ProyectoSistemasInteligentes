@@ -26,20 +26,20 @@ X_test = mnist_test.get_flattened_data()    # Datos de test (10000x784)
 y_test = mnist_test.get_one_hot_labels()    # Etiquetas test (10000x10)
 
 # Configuración del modelo (MENU DE OPCIONES)
-usingSecondLayer = True    # Activar segunda capa oculta (aumenta capacidad del modelo)
+usingSecondLayer = False    # Activar segunda capa oculta (aumenta capacidad del modelo)
 usingAdamOptimizer = True  # Usar Adam en lugar de SGD manual
 usingLossRegulation = True # Aplicar regularización L2
 
 # Direccion de Modelo
-model = "model1"
+model = "model9"
 
 # Hiperparámetros del modelo
 input_size = 784        # 28x28 pixeles (MNIST)
 hidden_size = 128      # Neuronas en capa oculta
 output_size = 10        # 10 dígitos (0-9)
-learning_rate = 0.001     # Tasa de aprendizaje inicial
-epochs = 500           # Iteraciones completas sobre el dataset
-batchSize = 64      # Tamaño del mini-batch
+learning_rate = 0.1     # Tasa de aprendizaje inicial
+epochs = 20          # Iteraciones completas sobre el dataset
+batchSize = 64     # Tamaño del mini-batch
 saveandprinteach = 1    # Frecuencia de guardado/impresión (cada X épocas)
 
 # Configuración de pruebas
